@@ -1,0 +1,79 @@
+#!/bin/bash
+
+show_help() {
+    echo "Positional arguments:"
+    echo "deploy"
+    echo "  all"
+    echo "  compute"
+    echo "  network"
+    echo "  service"
+    echo "    databases"
+    echo "Optional arguments:" 
+    echo "--version <series-name>                deploying openstack series."
+    echo "--config <file-path>                   deploying configuretion."
+    echo "--management-ip <management-ipaddress> "
+    echo "--external-ip <external-ipaddress>     "
+    echo "--token <admin-token>                  "
+    echo "Other options:"
+    echo "  --help                  display this help message."
+    echo "  --run"
+}
+
+load_configure() {
+#    . $1
+    echo "LOAD" $1
+    if [ ! -f $1 ]; then
+        echo "exsist path."
+        exit 1
+    fi
+}
+
+run() {
+    echo ""
+}
+
+deploy() {
+    echo $*
+    for arg in $*
+    do
+        case "$arg" in
+            "--config")
+                val=$2
+                load_configure $val
+                shift 2
+                ;;
+            "--test")
+                echo $*
+                val=$2
+                echo $arg $val
+                shift 2
+                ;;
+            *)
+                if [[ ! -z "$1" ]] && [[ ! "$1" =~ ^-+ ]]; then
+                    param+=( "$1" )
+                    shift 1
+                fi
+                ;;
+        esac
+    done
+}
+
+run_commands() {
+    case "$1" in
+        "deploy") deploy $*;;
+        "--help") show_help;;
+        "--run")
+                  . deploy-prerequisites.sh
+                  . deploy-db.sh
+        ;;
+        * ) echo "missing option name (use --help)"
+    esac
+}
+
+if [ $# -lt 1 ]; then
+    echo "$0 : missing command name (use --help)"
+else
+    option=$*
+    run_commands $option
+fi
+
