@@ -23,7 +23,7 @@ if [ -z "$(service keystone status | awk 'match($0, /start\/running.*/)')" ]; th
 fi
 sleep 10
 
-source $repo_path/tools/credentials keystone
+source $repo_path/tools/credentials secret
 #export OS_TOKEN="$os_token"
 #export OS_SERVICE_TOKEN="$os_token"
 #export OS_URL="http://$endpoint:35357/v2.0"
@@ -52,7 +52,7 @@ keystone --debug endpoint-create \
   --adminurl http://$management_ip:35357/v2.0 \
   --region regionOne
 
-source $repo_path/tools/credentials admin
+source $repo_path/tools/credentials tenant
 
 
 keystone tenant-list
