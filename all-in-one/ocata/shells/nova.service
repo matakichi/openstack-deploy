@@ -1,0 +1,19 @@
+#!/bin/bash
+
+case "$1" in
+start)
+;;
+stop)
+;;
+status)
+;;
+restart)
+;;
+*)
+        echo "`basename $0` {start|stop|status|restart}" >&2
+        exit 1
+;;
+esac
+
+cd /etc/init.d/; for i in `ls nova*` ; do service $i $1 ; done
+for i in $( ls nova-* ); do service $i status; cd; done
